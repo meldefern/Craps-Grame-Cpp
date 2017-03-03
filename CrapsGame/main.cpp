@@ -2,6 +2,7 @@
 //  main.cpp
 //  CrapsGame
 //
+//
 //  Created by Melinda Fernandes on 02/03/2017.
 //  Copyright © 2017 Melinda Fernandes. All rights reserved.
 //
@@ -12,6 +13,10 @@ using std::endl;
 
 #include <String>
 using std::string;
+
+#include <cstdlib>
+using std::rand;
+using std::srand;
 
 #include <time.h>
 using std::time;
@@ -24,42 +29,52 @@ int main(){
     int sum = 0;    // store returned sum from rollDice function
     int point = 0;  // store point when it has been made
     string hasRolled = "Player has rolled ";    // roll statement to be printed after rolls
-    
+
     srand(time(0));     // store seed from time
     
     sum = rollDice();
     cout << hasRolled << sum << endl;
     
     //  determine game outcome
-    if (sum == 7 || sum == 11){
-        cout << "WIN" << endl;
-        return 0;       // terminate game
-    }
-    if (sum == 2 || sum == 3 || sum == 12){
-        cout << "LOSE" << endl;
-        return 0;       //terminate game
-    }
-    if (sum == 4 || sum == 5 || sum == 6 || sum == 8 || sum == 9 || sum == 10 ){
-        point = sum;
-        cout << "Point made is " << point << endl;
-        
-        sum = rollDice();
-        while (sum != point){
-            if (sum == 7){
-                cout << hasRolled << sum << endl;
-                cout << "LOSE" << endl;
-                return 0;   // terminate game
-            }
-            else
-                sum = rollDice();   // to continue while loop
-        }   // end while
-        
-        //return "WIN" as while condition is not satisfied
-        cout << hasRolled << sum << endl;
-        cout << "Point has been made" << endl;
-        cout << "WIN" << endl;
-        
-    }
+    switch(sum){
+        // player wins if
+        case 7:     //roll 7 on first throw
+        case 11:    //roll 11 on first throw
+            cout << "WIN" << endl;
+            return 0;       // terminate game
+        // player loses if
+        case 2:     //roll 2 on first throw
+        case 3:     //etc.
+        case 12:
+            cout << "LOSE" << endl;
+            return 0;       //terminate game
+        // point is made and game continues if
+        default:    //default cases cover sums 4, 5, 6, 8, 9, 10
+            point = sum;    // point takes the value of whatever sum is
+            cout << "Point made is " << point << endl;
+            
+            // continue game
+            sum = rollDice();
+            while (sum != point){
+                switch(sum){
+                    // lose if rolled 7 before point
+                    case 7:
+                        cout << hasRolled << sum << endl;
+                        cout << "LOSE" << endl;
+                        return 0;   // terminate game
+                    // continue game and while loop if any other number is rolled
+                    default:
+                        sum = rollDice();
+                }
+            } //point has been made, end while
+            
+            // sum == point, return win
+            cout << hasRolled << sum << endl;
+            cout << "Point has been made" << endl;
+            cout << "WIN" << endl;
+            
+    }   // exit switch statement
+
     
     return 0;   //terminate game
 }
